@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rewards Automator V2</title>
+  <link rel="stylesheet" href="popup.css">
+  <script src="theme.js"></script>
+</head>
+<body>
+  <div class="app" id="main">
+    <header class="header enter" style="--i:0">
+      <div class="brand">
+        <div class="brand-icon">
+          <svg width="20" height="20" viewBox="0 0 128 128" fill="none" aria-hidden="true">
+            <defs>
+              <linearGradient id="brand-coin" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#FFE27A"/>
+                <stop offset="1" stop-color="#F59E0B"/>
+              </linearGradient>
+            </defs>
+            <circle cx="52" cy="52" r="18" fill="url(#brand-coin)"/>
+            <circle cx="52" cy="52" r="29" stroke="#fff" stroke-width="13"/>
+            <path d="M73 73L96 96" stroke="#fff" stroke-width="16" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h1>Rewards Automator</h1>
+      </div>
+      <div class="header-actions">
+        <button id="settings-open" class="icon-btn" type="button" aria-label="Open settings" title="Settings" aria-haspopup="dialog" aria-controls="settings">
+          <svg class="icon-gear" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        </button>
+        <button id="theme-toggle" class="icon-btn" type="button" aria-label="Switch theme" title="Switch theme">
+          <svg class="icon-moon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+          <svg class="icon-sun" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2M12 20.5v2M4.6 4.6l1.4 1.4M18 18l1.4 1.4M1.5 12h2M20.5 12h2M4.6 19.4L6 18M18 6l1.4-1.4"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="progress-section enter" style="--i:1">
+        <div class="ring-wrap">
+        <svg class="progress-ring" viewBox="0 0 120 120" role="progressbar" aria-label="Search progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+          <defs>
+            <linearGradient id="ring-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" class="ring-stop-a"/>
+              <stop offset="100%" class="ring-stop-b"/>
+            </linearGradient>
+          </defs>
+          <circle class="progress-track" cx="60" cy="60" r="52"/>
+          <circle id="progress-arc" class="progress-fill" cx="60" cy="60" r="52"/>
+        </svg>
+        <div class="progress-label">
+          <span id="progress-text" class="progress-count">0 / 0</span>
+          <span id="progress-sub" class="progress-sub">searches</span>
+        </div>
+        </div>
+        <div id="status" class="status stopped" role="status" aria-live="polite">
+          <span class="status-dot"></span>
+          <span id="status-text">Ready</span>
+        </div>
+      </div>
+
+      <div class="points-grid" role="group" aria-label="Points summary">
+        <div class="point-card enter" style="--i:2" tabindex="0" aria-describedby="tip-start">
+          <span class="point-label">Start</span>
+          <span id="start-points" class="point-value">—</span>
+          <span id="tip-start" class="tip" role="tooltip"></span>
+        </div>
+        <div class="point-card enter" style="--i:3" tabindex="0" aria-describedby="tip-current">
+          <span class="point-label">Current</span>
+          <span id="end-points" class="point-value">—</span>
+          <span id="tip-current" class="tip" role="tooltip"></span>
+        </div>
+        <div class="point-card accent enter" style="--i:4" tabindex="0" aria-describedby="tip-earned">
+          <span id="earned-label" class="point-label">Earned</span>
+          <span id="earned-points" class="point-value">+0</span>
+          <span id="tip-earned" class="tip" role="tooltip"></span>
+        </div>
+      </div>
+
+      <div id="daily" class="daily enter" style="--i:5" hidden>
+        <div class="daily-head">
+          <span>Today's Bing search</span>
+          <span id="daily-value" class="daily-value">0 / 0 pts</span>
+        </div>
+        <div class="daily-bar"><span id="daily-fill" class="daily-fill"></span></div>
+        <span id="daily-hint" class="daily-hint"></span>
+      </div>
+
+      <div id="notice" class="notice enter" style="--i:5" hidden>
+        <svg class="notice-icon icon-ok" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M8 12.5l2.5 2.5L16 9.5"/></svg>
+        <svg class="notice-icon icon-warn" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9.5 17h-19z"/><path d="M12 10v4.5M12 17.5v.01"/></svg>
+        <div class="notice-content">
+          <span id="notice-title" class="notice-title"></span>
+          <span id="notice-body" class="notice-body"></span>
+          <button id="notice-copy" class="notice-action" type="button" hidden>Copy details</button>
+        </div>
+      </div>
+
+      <div id="error-banner" class="error-banner" hidden>
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="currentColor" aria-hidden="true">
+          <path d="M7 0a7 7 0 1 0 0 14A7 7 0 0 0 7 0zm.5 3v5h-1V3h1zm-.5 7a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5z"/>
+        </svg>
+        <span id="error-text"></span>
+        <button id="error-dismiss" class="error-close" type="button" aria-label="Dismiss">&times;</button>
+      </div>
+
+      <div class="controls enter" style="--i:6">
+        <div class="input-row">
+          <label for="count">Searches</label>
+          <input type="number" id="count" value="30" min="1" max="150" step="1" aria-describedby="count-hint">
+          <span id="count-hint" class="hint">1–150</span>
+        </div>
+        <button id="btn-action" class="btn action" type="button" data-mode="start">
+          <span class="btn-fill" aria-hidden="true"></span>
+          <svg class="action-icon" width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path class="action-shape" d="M3.5 1.8L12.2 7L12.2 7L3.5 12.2Z"/></svg>
+          <span id="btn-action-label" class="action-label">Start Searching</span>
+        </button>
+      </div>
+    </main>
+
+    <footer class="footer enter" style="--i:7">
+      <a href="https://t.me/Forhad71" target="_blank" rel="noopener" class="tg-link" title="Telegram: @Forhad71">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.161c-.18 1.897-.962 6.502-1.359 8.627-.168.9-.5 1.201-.82 1.23-.697.064-1.226-.461-1.901-.903-1.056-.692-1.653-1.123-2.678-1.799-1.185-.781-.417-1.21.258-1.911.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.492-1.302.484-.429-.008-1.252-.242-1.865-.44-.751-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.831-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635.099-.002.321.023.465.141.12.098.153.23.168.332.016.103.035.337.02.52z"/></svg>
+        @Forhad71
+      </a>
+    </footer>
+  </div>
+
+  <section id="settings" class="settings" role="dialog" aria-modal="true" aria-labelledby="settings-title" inert>
+    <header class="settings-head">
+      <button id="settings-back" class="icon-btn" type="button" aria-label="Back to main screen" title="Back">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+      </button>
+      <h2 id="settings-title">Settings</h2>
+    </header>
+
+    <div class="settings-body">
+      <div class="set-group" style="--g:0">
+        <h3 class="set-title">Appearance</h3>
+        <div class="set-row">
+          <span class="set-label">Theme</span>
+          <div class="segmented" id="set-theme" role="radiogroup" aria-label="Theme">
+            <button type="button" role="radio" data-value="light">Light</button>
+            <button type="button" role="radio" data-value="dark">Dark</button>
+            <button type="button" role="radio" data-value="system">System</button>
+          </div>
+        </div>
+        <label class="set-row">
+          <span class="set-label">Reduce animations<small>Turn off motion effects</small></span>
+          <input type="checkbox" id="set-reduce" class="switch">
+        </label>
+      </div>
+
+      <div class="set-group" style="--g:1">
+        <h3 class="set-title">Searches</h3>
+        <div class="set-row column">
+          <span class="set-label">Default searches</span>
+          <div class="chips" id="set-count-chips" role="radiogroup" aria-label="Default searches">
+            <button type="button" role="radio" data-value="10">10</button>
+            <button type="button" role="radio" data-value="20">20</button>
+            <button type="button" role="radio" data-value="30">30</button>
+            <button type="button" role="radio" data-value="50">50</button>
+            <input type="number" id="set-count" min="1" max="150" step="1" aria-label="Custom number of searches">
+          </div>
+        </div>
+        <div class="set-row">
+          <span class="set-label">Pace<small>Time spent on each result</small></span>
+          <div class="segmented" id="set-pace" role="radiogroup" aria-label="Pace">
+            <button type="button" role="radio" data-value="normal">Normal</button>
+            <button type="button" role="radio" data-value="relaxed">Relaxed</button>
+          </div>
+        </div>
+        <label class="set-row">
+          <span class="set-label">Stop at daily limit<small>End early once Bing search is maxed</small></span>
+          <input type="checkbox" id="set-autostop" class="switch">
+        </label>
+      </div>
+
+      <div class="set-group" style="--g:2">
+        <h3 class="set-title">Automation</h3>
+        <label class="set-row">
+          <span class="set-label">Wait out Bing cooldown<small>Pause when points stop counting, then resume</small></span>
+          <input type="checkbox" id="set-cooldown" class="switch">
+        </label>
+        <div id="cooldown-opts" class="sub-opts">
+          <div class="set-row">
+            <span class="set-label">Wait for</span>
+            <div class="segmented" id="set-cooldown-min" role="radiogroup" aria-label="Cooldown wait">
+              <button type="button" role="radio" data-value="10">10m</button>
+              <button type="button" role="radio" data-value="15">15m</button>
+              <button type="button" role="radio" data-value="20">20m</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="set-group" style="--g:3">
+        <h3 class="set-title">Reminders</h3>
+        <label class="set-row">
+          <span class="set-label">Daily reminders<small>A card with today's progress</small></span>
+          <input type="checkbox" id="set-reminder" class="switch">
+        </label>
+        <div id="reminder-opts" class="reminder-opts">
+          <div class="set-row">
+            <span class="set-label">Times per day</span>
+            <div class="stepper" id="set-perday">
+              <button type="button" data-step="-1" aria-label="Fewer reminders">−</button>
+              <output id="set-perday-value">3</output>
+              <button type="button" data-step="1" aria-label="More reminders">+</button>
+            </div>
+          </div>
+          <div class="set-row">
+            <span class="set-label">Active hours</span>
+            <div class="time-range">
+              <input type="time" id="set-from" aria-label="Reminders from">
+              <span aria-hidden="true">–</span>
+              <input type="time" id="set-to" aria-label="Reminders until">
+            </div>
+          </div>
+          <div class="set-row">
+            <span class="set-label">Gap between</span>
+            <div class="segmented" id="set-gap" role="radiogroup" aria-label="Gap between reminders">
+              <button type="button" role="radio" data-value="1">1h</button>
+              <button type="button" role="radio" data-value="2">2h</button>
+              <button type="button" role="radio" data-value="4">4h</button>
+            </div>
+          </div>
+          <div class="set-row">
+            <span class="set-label">Show for</span>
+            <div class="segmented" id="set-duration" role="radiogroup" aria-label="How long the reminder stays">
+              <button type="button" role="radio" data-value="5">5s</button>
+              <button type="button" role="radio" data-value="8">8s</button>
+              <button type="button" role="radio" data-value="12">12s</button>
+            </div>
+          </div>
+          <button id="set-preview" class="link-btn" type="button">Show a preview on this tab</button>
+          <p id="set-preview-msg" class="preview-msg" role="status" hidden></p>
+        </div>
+      </div>
+
+      <button id="set-reset" class="reset-btn" type="button" style="--g:4">Reset to defaults</button>
+    </div>
+  </section>
+
+  <script src="popup.js"></script>
+</body>
+</html>

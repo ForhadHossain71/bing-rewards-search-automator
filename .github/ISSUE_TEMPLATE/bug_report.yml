@@ -1,0 +1,70 @@
+name: Bug report
+description: Something is not working as expected.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting a bug. Please fill in as much as you can.
+        **Do not paste personal data** such as your email address or account details.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the problem and what you expected instead.
+      placeholder: "After 10 searches the popup showed 'Could not read your starting points'..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Open the popup
+        2. Set Searches to 30
+        3. Press Start Searching
+        4. ...
+    validations:
+      required: true
+
+  - type: input
+    id: version
+    attributes:
+      label: Extension version
+      description: Shown on edge://extensions or chrome://extensions.
+      placeholder: "1.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browser
+    attributes:
+      label: Browser
+      options:
+        - Microsoft Edge
+        - Google Chrome
+        - Other Chromium browser
+    validations:
+      required: true
+
+  - type: input
+    id: browser-version
+    attributes:
+      label: Browser version
+      placeholder: "130.0.2849.68"
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Copied details or console output
+      description: If the popup shows a notice, click "Copy details" and paste it here. Service worker console errors also help.
+      render: text
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: Drag and drop images here. Please hide your points balance or account name if you prefer.

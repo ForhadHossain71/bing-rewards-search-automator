@@ -1,0 +1,77 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Check syntax and manifest
+        run: |
+          node --check background.js
+          node --check popup.js
+          node --check theme.js
+          node -e "JSON.parse(require('fs').readFileSync('manifest.json','utf8'))"
+
+      - name: Check tag matches manifest version
+        id: version
+        run: |
+          MANIFEST=$(node -p "require('./manifest.json').version")
+          # Pad the manifest version to three parts: 1.0 -> 1.0.0
+          FULL=$(node -p "('$MANIFEST'.split('.').concat(['0','0','0'])).slice(0,3).join('.')")
+          TAG="${GITHUB_REF_NAME#v}"
+          echo "manifest=$MANIFEST full=$FULL tag=$TAG"
+          if [ "$FULL" != "$TAG" ]; then
+            echo "::error::Tag v$TAG does not match manifest version $MANIFEST"
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Build extension zip
+        run: |
+          ZIP="bing-rewards-search-automator-v${{ steps.version.outputs.tag }}.zip"
+          mkdir -p dist
+          zip -r -X "dist/$ZIP" manifest.json background.js popup.html popup.css popup.js theme.js icons LICENSE
+          unzip -l "dist/$ZIP"
+          echo "ZIP=dist/$ZIP" >> "$GITHUB_ENV"
+
+      - name: Extract release notes from CHANGELOG
+        run: |
+          awk -v ver="${{ steps.version.outputs.tag }}" '
+            index($0, "## [" ver "]") == 1 { found = 1; next }
+            found && (index($0, "## [") == 1 || index($0, "[") == 1) { exit }
+            found { print }
+          ' CHANGELOG.md > release-notes.md
+          if [ ! -s release-notes.md ]; then
+            echo "::error::No CHANGELOG section for ${{ steps.version.outputs.tag }}"
+            exit 1
+          fi
+          {
+            echo ""
+            echo "### Install"
+            echo "1. Download the zip below and unzip it."
+            echo "2. Open \`edge://extensions\` or \`chrome://extensions\` and turn on **Developer mode**."
+            echo "3. Click **Load unpacked** and select the unzipped folder."
+          } >> release-notes.md
+          cat release-notes.md
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: v${{ steps.version.outputs.tag }}
+          body_path: release-notes.md
+          files: ${{ env.ZIP }}

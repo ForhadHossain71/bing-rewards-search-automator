@@ -1,0 +1,28 @@
+# Build output
+dist/
+build/
+*.zip
+*.crx
+
+# Extension signing key (never commit)
+*.pem
+
+# Secrets
+.env
+.env.*
+!.env.example
+
+# Node (only used for optional local checks)
+node_modules/
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo

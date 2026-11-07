@@ -1,0 +1,34 @@
+{
+  "manifest_version": 3,
+  "name": "Rewards Search Automator By Flex✘",
+  "description": "Automate Bing searches to earn Microsoft Rewards points effortlessly.",
+  "version": "1.0",
+  "minimum_chrome_version": "110",
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "permissions": ["tabs", "storage", "scripting", "alarms"],
+  "host_permissions": [
+    "https://bing.com/*",
+    "https://*.bing.com/*",
+    "https://trends.google.com/*"
+  ],
+  "optional_host_permissions": ["<all_urls>"],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Rewards Automator",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none';"
+  }
+}
